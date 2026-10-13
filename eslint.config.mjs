@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Trailer-Renderwerkzeuge (kein Teil der Website):
+    "trailer/**",
     // Vendored Claude Code skills.
     ".claude/**",
   ]),

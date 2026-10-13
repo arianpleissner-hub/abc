@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pleissner Trailer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1e293b;
+    --navy-deep: #0f172a;
+    --ink: #0b1220;
+    --slate: #94a3b8;
+    --light: #e2e8f0;
+    --accent: #ea580c;
+    --accent-soft: #fb923c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #000; overflow: hidden; }
+  body { display: grid; place-items: center; font-family: "Source Sans 3", system-ui, sans-serif; }
+
+  #stage {
+    position: relative; width: 1920px; height: 1080px; overflow: hidden;
+    background: radial-gradient(ellipse at 30% 20%, #23324a 0%, var(--navy-deep) 55%, var(--ink) 100%);
+    color: #fff; transform-origin: center center; flex: none;
+  }
+  .grid {
+    position: absolute; inset: -200px;
+    background-image:
+      linear-gradient(rgba(148,163,184,.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148,163,184,.07) 1px, transparent 1px),
+      linear-gradient(rgba(148,163,184,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148,163,184,.035) 1px, transparent 1px);
+    background-size: 160px 160px, 160px 160px, 32px 32px, 32px 32px;
+  }
+  .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.55) 100%); pointer-events: none; }
+
+  .scene { position: absolute; inset: 0; opacity: 0; }
+  .a { position: absolute; opacity: 0; will-change: transform, opacity; }
+
+  .display { font-family: "Lexend", sans-serif; font-weight: 600; letter-spacing: -0.01em; }
+  .eyebrow { font-family: "Lexend", sans-serif; font-size: 26px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--accent-soft); }
+  .accent { color: var(--accent); }
+
+  /* Szene 1 */
+  #house { position: absolute; left: 1060px; top: 150px; width: 720px; height: 720px; }
+  #house path, #house line, #house rect { fill: none; stroke: var(--light); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  #house .crack { stroke: var(--accent); stroke-width: 5; }
+  #house .drop { stroke: #60a5fa; stroke-width: 3; }
+  #house .mold { stroke: #a3e635; stroke-width: 2.5; }
+  #house .dim { stroke: rgba(148,163,184,.45); stroke-width: 2; stroke-dasharray: 0; }
+  .s1line { left: 160px; font-size: 64px; line-height: 1.15; }
+  .s1line small { display: block; font-family: "Source Sans 3"; font-weight: 400; font-size: 30px; color: var(--slate); margin-top: 8px; letter-spacing: 0; }
+  #scan { position: absolute; left: 1060px; width: 720px; height: 4px; background: linear-gradient(90deg, transparent, var(--accent), transparent); box-shadow: 0 0 30px var(--accent); opacity: 0; }
+
+  /* Szene 2 */
+  .brand-bar { left: 160px; top: 380px; width: 12px; height: 320px; background: var(--accent); transform-origin: top; }
+  .brand-name { left: 220px; top: 360px; font-size: 150px; font-weight: 700; line-height: 1; }
+  .brand-title { left: 226px; top: 540px; font-size: 52px; font-weight: 300; color: var(--light); font-family: "Lexend"; }
+  .brand-claim { left: 226px; top: 630px; font-size: 34px; color: var(--slate); }
+
+  /* Szene 3 */
+  .sec-head { left: 160px; top: 120px; }
+  .sec-head h2 { font-family: "Lexend"; font-weight: 600; font-size: 72px; margin-top: 14px; }
+  .card {
+    width: 760px; height: 480px; top: 400px; padding: 56px;
+    background: linear-gradient(160deg, rgba(255,255,255,.08), rgba(255,255,255,.025));
+    border: 1px solid rgba(255,255,255,.12); border-radius: 20px; backdrop-filter: blur(4px);
+  }
+  .card .ic { width: 96px; height: 96px; border-radius: 18px; background: rgba(234,88,12,.15); display: grid; place-items: center; }
+  .card svg { width: 56px; height: 56px; stroke: var(--accent-soft); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .card h3 { font-family: "Lexend"; font-weight: 600; font-size: 50px; margin-top: 36px; }
+  .card p { font-size: 32px; line-height: 1.4; color: #cbd5e1; margin-top: 18px; }
+  .card .num { position: absolute; right: 48px; top: 40px; font-family: "Lexend"; font-size: 28px; color: rgba(255,255,255,.3); }
+
+  /* Szene 4 */
+  .track { left: 222px; top: 520px; width: 1170px; height: 4px; background: rgba(255,255,255,.12); opacity: 1; }
+  .track-fill { position: absolute; left: 0; top: 0; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); }
+  .step { width: 360px; top: 470px; }
+  .step .dot { width: 104px; height: 104px; border-radius: 50%; background: var(--navy); border: 4px solid var(--accent); display: grid; place-items: center; font-family: "Lexend"; font-weight: 600; font-size: 38px; color: var(--accent-soft); }
+  .step h3 { font-family: "Lexend"; font-weight: 600; font-size: 46px; margin-top: 40px; }
+  .step p { font-size: 28px; line-height: 1.4; color: #cbd5e1; margin-top: 14px; padding-right: 30px; }
+
+  /* Szene 5 */
+  .pillar { top: 360px; width: 480px; text-align: center; }
+  .pillar .ic { width: 168px; height: 168px; margin: 0 auto; border-radius: 50%; border: 3px solid var(--accent); display: grid; place-items: center; background: rgba(234,88,12,.1); }
+  .pillar svg { width: 84px; height: 84px; stroke: #fff; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .pillar h3 { font-family: "Lexend"; font-weight: 600; font-size: 46px; margin-top: 48px; line-height: 1.2; }
+
+  /* Szene 6 */
+  #quote { position: absolute; left: 260px; right: 260px; top: 360px; font-family: "Lexend"; font-weight: 600; font-size: 78px; line-height: 1.3; }
+  #quote span { opacity: .12; }
+  .qmark { left: 240px; top: 100px; font-family: "Lexend"; font-size: 260px; color: var(--accent); line-height: 1; }
+
+  /* Szene 7 */
+  .end-name { left: 0; right: 0; top: 300px; text-align: center; font-size: 132px; font-weight: 700; }
+  .end-title { left: 0; right: 0; top: 460px; text-align: center; font-family: "Lexend"; font-weight: 300; font-size: 50px; color: var(--light); }
+  .end-line { left: 860px; top: 560px; width: 200px; height: 5px; background: var(--accent); transform-origin: center; }
+  .end-cta { left: 0; right: 0; top: 640px; text-align: center; }
+  .end-cta span { display: inline-block; background: var(--accent); color: #fff; font-family: "Lexend"; font-weight: 600; font-size: 44px; padding: 28px 64px; border-radius: 12px; box-shadow: 0 20px 60px rgba(234,88,12,.35); }
+  .end-url { left: 0; right: 0; top: 820px; text-align: center; font-family: "Lexend"; font-size: 40px; letter-spacing: .06em; color: var(--light); }
+
+  #fade { position: absolute; inset: 0; background: #000; pointer-events: none; }
+
+  /* Steuerung (nur im Browser, nicht im Video) */
+  #ui { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; gap: 10px; align-items: center; background: rgba(15,23,42,.85); padding: 10px 14px; border-radius: 999px; color: #fff; font: 14px "Source Sans 3", sans-serif; transition: opacity .4s; z-index: 10; }
+  #ui button { background: var(--accent); color: #fff; border: 0; border-radius: 999px; padding: 8px 16px; font: 600 14px "Source Sans 3"; cursor: pointer; }
+  #ui input { width: 240px; accent-color: var(--accent); }
+  body.idle #ui { opacity: 0; }
+  body.capture #ui { display: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="grid" id="grid"></div>
+
+  <!-- 1 · Problem -->
+  <section class="scene" data-s="0" data-e="7.6">
+    <svg id="house" viewBox="0 0 720 720">
+      <path class="draw" data-s="0.3" data-d="1.6" pathLength="1" d="M90 330 L360 110 L630 330"/>
+      <path class="draw" data-s="0.9" data-d="1.4" pathLength="1" d="M140 290 L140 640 L580 640 L580 290"/>
+      <path class="draw" data-s="1.4" data-d="0.9" pathLength="1" d="M300 640 L300 470 L420 470 L420 640"/>
+      <path class="draw" data-s="1.6" data-d="0.9" pathLength="1" d="M190 370 h80 v80 h-80 z M450 370 h80 v80 h-80 z"/>
+      <path class="draw" data-s="1.8" data-d="0.7" pathLength="1" d="M470 210 v-70 h50 v110"/>
+      <path class="draw dim" data-s="2.0" data-d="1.0" pathLength="1" d="M140 680 L580 680 M140 670 v20 M580 670 v20"/>
+      <path class="draw crack" data-s="2.6" data-d="0.9" pathLength="1" d="M190 450 L178 488 L190 522 L171 560 L183 598 L166 640"/>
+      <path class="draw drop" data-s="3.6" data-d="0.8" pathLength="1" d="M470 500 c0 -18 14 -30 14 -30 s14 12 14 30 a14 14 0 0 1 -28 0z M520 540 c0 -12 10 -20 10 -20 s10 8 10 20 a10 10 0 0 1 -20 0z"/>
+      <path class="draw mold" data-s="4.4" data-d="0.8" pathLength="1" d="M510 616 q12 -16 24 0 t24 0 M520 596 q10 -12 20 0 M550 630 q8 -10 16 0"/>
+    </svg>
+    <div id="scan"></div>
+    <div class="a display s1line" style="top:300px" data-s="2.7" data-e="7.4">Ein Riss in der Wand.</div>
+    <div class="a display s1line" style="top:400px" data-s="3.6" data-e="7.4">Feuchte im Keller.</div>
+    <div class="a display s1line" style="top:500px" data-s="4.4" data-e="7.4">Schimmel in der Ecke.</div>
+    <div class="a display s1line accent" style="top:660px" data-s="5.6" data-e="7.4">Was steckt dahinter?</div>
+  </section>
+
+  <!-- 2 · Marke -->
+  <section class="scene" data-s="7.6" data-e="13.4">
+    <div class="a brand-bar" data-s="7.9" data-e="13.2" data-fx="growY"></div>
+    <div class="a display brand-name" data-s="8.2" data-e="13.2" data-fx="left">Axel Pleissner</div>
+    <div class="a brand-title" data-s="8.9" data-e="13.2" data-fx="left">Sachverständiger für Bauschäden</div>
+    <div class="a brand-claim" data-s="9.8" data-e="13.2">Klarheit bei Bauschäden – unabhängig und verständlich.</div>
+  </section>
+
+  <!-- 3 · Leistungen -->
+  <section class="scene" data-s="13.4" data-e="26.4">
+    <div class="a sec-head" data-s="13.6" data-e="26.2">
+      <div class="eyebrow">Leistungen</div>
+      <h2>Wobei ich Ihnen helfe</h2>
+    </div>
+    <div class="a card" style="left:160px" data-s="14.2" data-e="18.3" data-fx="up">
+      <span class="num">01</span>
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><circle cx="11.5" cy="14.5" r="2.5"/><path d="M13.3 16.3 15 18"/></svg></div>
+      <h3>Bauschadensgutachten</h3>
+      <p>Ursachenanalyse von Rissen, Setzungen, undichten Dächern – mit klarer Dokumentation und Sanierungsempfehlung.</p>
+    </div>
+    <div class="a card" style="left:1000px" data-s="14.5" data-e="18.4" data-fx="up">
+      <span class="num">02</span>
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg></div>
+      <h3>Feuchte &amp; Schimmel</h3>
+      <p>Messung und Bewertung von Feuchtigkeit und Schimmelbefall – liegt die Ursache im Bauteil oder in der Nutzung?</p>
+    </div>
+    <div class="a card" style="left:160px" data-s="18.5" data-e="22.4" data-fx="up">
+      <span class="num">03</span>
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a6 6 0 0 1 6-6"/><path d="M14 6a6 6 0 0 1 6 6v3"/></svg></div>
+      <h3>Baubegleitung &amp; Abnahme</h3>
+      <p>Qualitätskontrolle während der Bauphase und Unterstützung bei der Bauabnahme – Mängel früh erkennen.</p>
+    </div>
+    <div class="a card" style="left:1000px" data-s="18.8" data-e="22.5" data-fx="up">
+      <span class="num">04</span>
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/><path d="M9 21v-6h6v6"/></svg></div>
+      <h3>Kaufberatung Immobilie</h3>
+      <p>Begehung vor dem Kauf: Zustand, Risiken und Sanierungsaufwand – bevor Sie unterschreiben.</p>
+    </div>
+    <div class="a card" style="left:160px" data-s="22.6" data-e="26.2" data-fx="up">
+      <span class="num">05</span>
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <h3>Beweissicherung</h3>
+      <p>Dokumentation des Ist-Zustands vor Bau-, Abriss- oder Tiefbauarbeiten in der Nachbarschaft.</p>
+    </div>
+    <div class="a card" style="left:1000px" data-s="22.9" data-e="26.3" data-fx="up">
+      <span class="num">06</span>
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg></div>
+      <h3>Streitfälle &amp; Versicherung</h3>
+      <p>Fachliche Unterstützung bei Auseinandersetzungen mit Bauunternehmen, Vermietern oder Versicherungen.</p>
+    </div>
+  </section>
+
+  <!-- 4 · Ablauf -->
+  <section class="scene" data-s="26.4" data-e="34.6">
+    <div class="a sec-head" data-s="26.6" data-e="34.4">
+      <div class="eyebrow">Ablauf</div>
+      <h2>In vier Schritten zum Gutachten</h2>
+    </div>
+    <div class="a track" data-s="27.2" data-e="34.4" data-fx="none"><div class="track-fill" data-s="27.4" data-d="5.4"></div></div>
+    <div class="a step" style="left:170px" data-s="27.5" data-e="34.4">
+      <div class="dot">01</div><h3>Kontakt</h3><p>Sie schildern kurz den Schaden oder Ihr Vorhaben.</p>
+    </div>
+    <div class="a step" style="left:560px" data-s="28.9" data-e="34.4">
+      <div class="dot">02</div><h3>Ortstermin</h3><p>Besichtigung, Messung und Dokumentation vor Ort.</p>
+    </div>
+    <div class="a step" style="left:950px" data-s="30.3" data-e="34.4">
+      <div class="dot">03</div><h3>Auswertung</h3><p>Ursachen werden fachlich und nachvollziehbar bewertet.</p>
+    </div>
+    <div class="a step" style="left:1340px" data-s="31.7" data-e="34.4">
+      <div class="dot">04</div><h3>Gutachten</h3><p>Schriftlich – mit konkreten Handlungsempfehlungen.</p>
+    </div>
+  </section>
+
+  <!-- 5 · Werte -->
+  <section class="scene" data-s="34.6" data-e="40">
+    <div class="a pillar" style="left:200px" data-s="35.0" data-e="39.8" data-fx="scale">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <h3>Unabhängig<br>&amp; neutral</h3>
+    </div>
+    <div class="a pillar" style="left:720px" data-s="35.5" data-e="39.8" data-fx="scale">
+      <div class="ic"><svg viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></div>
+      <h3>Nachvollziehbare<br>Gutachten</h3>
+    </div>
+    <div class="a pillar" style="left:1240px" data-s="36.0" data-e="39.8" data-fx="scale">
+      <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+      <h3>Kurzfristige<br>Ortstermine</h3>
+    </div>
+  </section>
+
+  <!-- 6 · Zitat -->
+  <section class="scene" data-s="40" data-e="46">
+    <div class="a qmark" data-s="40.2" data-e="45.8" data-fx="scale">„</div>
+    <div id="quote" data-s="40.5" data-d="3.6">Ein gutes Gutachten zeigt nicht nur, was beschädigt ist – sondern <span class="hl">warum</span>, und was jetzt zu tun ist.</div>
+  </section>
+
+  <!-- 7 · Abschluss -->
+  <section class="scene" data-s="46" data-e="99">
+    <div class="a display end-name" data-s="46.3" data-e="99" data-fx="scale">Axel Pleissner</div>
+    <div class="a end-title" data-s="46.9" data-e="99">Sachverständiger für Bauschäden</div>
+    <div class="a end-line" data-s="47.4" data-e="99" data-fx="growX"></div>
+    <div class="a end-cta" data-s="48.0" data-e="99" data-fx="scale"><span>Jetzt Termin anfragen</span></div>
+    <div class="a end-url" data-s="48.6" data-e="99">www.pleissner.info</div>
+  </section>
+
+  <div class="vignette"></div>
+  <div id="fade"></div>
+</div>
+
+<div id="ui">
+  <button id="play">Pause</button>
+  <input id="seek" type="range" min="0" max="54" step="0.01" value="0">
+  <span id="time">0:00</span>
+  <button id="fs">Vollbild</button>
+</div>
+
+<script>
+const DURATION = 54;
+const stage = document.getElementById('stage');
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const easeOut = x => 1 - Math.pow(1 - x, 3);
+const easeInOut = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const num = (el, k, d) => el.dataset[k] !== undefined ? parseFloat(el.dataset[k]) : d;
+
+// Zitat in Wörter zerlegen
+const quote = document.getElementById('quote');
+(() => {
+  const out = [];
+  quote.childNodes.forEach(n => {
+    if (n.nodeType === 3) n.textContent.split(/(\s+)/).forEach(w => out.push(w.trim() ? `<span>${w}</span>` : w));
+    else out.push(`<span class="accent">${n.textContent}</span>`);
+  });
+  quote.innerHTML = out.join('');
+})();
+const qWords = [...quote.querySelectorAll('span')];
+
+const scenes = [...document.querySelectorAll('.scene')];
+const anims = [...document.querySelectorAll('.a')];
+const draws = [...document.querySelectorAll('.draw')];
+const fills = [...document.querySelectorAll('.track-fill')];
+const grid = document.getElementById('grid');
+const scan = document.getElementById('scan');
+const fade = document.getElementById('fade');
+
+function render(t) {
+  grid.style.transform = `translate(${-t * 6}px, ${-t * 3}px)`;
+
+  for (const s of scenes) {
+    const a = num(s, 's'), b = num(s, 'e');
+    s.style.opacity = clamp((t - a) / .5) * clamp((b - t) / .5);
+    s.style.visibility = (t >= a - .01 && t <= b + .01) ? 'visible' : 'hidden';
+  }
+
+  for (const el of anims) {
+    const a = num(el, 's'), b = num(el, 'e', 999), di = num(el, 'd', .8), dout = .45;
+    const pin = easeOut(clamp((t - a) / di)), pout = clamp((b - t) / dout);
+    const fx = el.dataset.fx || 'up';
+    el.style.opacity = Math.min(pin, pout);
+    const k = 1 - pin;
+    if (fx === 'up') el.style.transform = `translateY(${k * 50}px)`;
+    else if (fx === 'left') el.style.transform = `translateX(${-k * 80}px)`;
+    else if (fx === 'scale') el.style.transform = `scale(${0.92 + 0.08 * pin})`;
+    else if (fx === 'growY') { el.style.transform = `scaleY(${pin})`; el.style.opacity = pout; }
+    else if (fx === 'growX') { el.style.transform = `scaleX(${pin})`; el.style.opacity = pout; }
+  }
+
+  for (const p of draws) {
+    const pr = easeInOut(clamp((t - num(p, 's')) / num(p, 'd')));
+    p.style.strokeDasharray = '1 1';
+    p.style.strokeDashoffset = 1 - pr;
+  }
+  for (const f of fills) f.style.transform = `scaleX(${easeInOut(clamp((t - num(f, 's')) / num(f, 'd')))})`;
+
+  // Messlinie über dem Haus
+  const sp = clamp((t - 5.0) / 1.8);
+  scan.style.top = (250 + sp * 520) + 'px';
+  scan.style.opacity = sp > 0 && sp < 1 ? Math.sin(sp * Math.PI) : 0;
+
+  // Zitat Wort für Wort
+  const qs = num(quote, 's'), qd = num(quote, 'd');
+  qWords.forEach((w, i) => {
+    const st = qs + (i / qWords.length) * qd;
+    w.style.opacity = .12 + .88 * clamp((t - st) / .35);
+  });
+
+  fade.style.opacity = Math.max(1 - clamp(t / .6), clamp((t - (DURATION - 1)) / 1));
+}
+
+// --- Wiedergabe im Browser ---
+let t0 = performance.now(), paused = false, pausedAt = 0;
+const seekEl = document.getElementById('seek'), timeEl = document.getElementById('time'), playBtn = document.getElementById('play');
+const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+function now() { return paused ? pausedAt : ((performance.now() - t0) / 1000) % DURATION; }
+function loop() {
+  if (window.__capture) return;
+  const t = now(); render(t); seekEl.value = t; timeEl.textContent = fmt(t);
+  requestAnimationFrame(loop);
+}
+playBtn.onclick = () => {
+  if (paused) { t0 = performance.now() - pausedAt * 1000; paused = false; playBtn.textContent = 'Pause'; }
+  else { pausedAt = now(); paused = true; playBtn.textContent = 'Play'; }
+};
+seekEl.oninput = () => { const v = +seekEl.value; pausedAt = v; t0 = performance.now() - v * 1000; };
+document.getElementById('fs').onclick = () => document.documentElement.requestFullscreen?.();
+document.addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); playBtn.click(); } });
+
+let idleTimer;
+document.addEventListener('mousemove', () => { document.body.classList.remove('idle'); clearTimeout(idleTimer); idleTimer = setTimeout(() => document.body.classList.add('idle'), 2000); });
+
+function fit() { const s = Math.min(innerWidth / 1920, innerHeight / 1080); stage.style.transform = `scale(${s})`; }
+addEventListener('resize', fit); fit();
+
+// Für die Video-Aufnahme: window.__capture = true; window.__render(t)
+window.__render = render;
+document.fonts.ready.then(() => { t0 = performance.now(); if (!window.__capture) requestAnimationFrame(loop); });
+</script>
+</body>
+</html>
